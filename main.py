@@ -43,7 +43,6 @@ def create_bonus():
     bonus.fill(COLOR_RED)
     bonus_rect = pygame.Rect(random.randint(
         0, WIDTH), 0, *bonus_size)
-    print(random.randint(0, WIDTH))
     bonus_move = [0, random.randint(1, 6)]
     return [bonus, bonus_rect, bonus_move]
 
