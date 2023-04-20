@@ -1,4 +1,5 @@
 import random
+import os
 
 import pygame
 from pygame.constants import QUIT, K_DOWN, K_UP, K_LEFT, K_RIGHT
@@ -26,12 +27,13 @@ bg_X1 = 0
 bg_X2 = bg.get_width()
 bg_move = 3
 
+IMAGE_PATH = "Goose"
+PLAYER_IMAGES = os.listdir(IMAGE_PATH)
+
+print(PLAYER_IMAGES)
+
 player_size = (140, 40)
-# pygame.Surface(player_size)
 player = pygame.image.load('player.png').convert_alpha()
-# player.fill(COLOR_BLACK)
-#
-# player_rect = player.get_rect()
 player_rect = pygame.Rect(
     0, 250, *player_size)
 playes_move_down = [0, 4]
@@ -42,9 +44,7 @@ playes_move_right = [4, 0]
 
 def create_enemy():
     enemy_size = (30, 30)
-    # enemy = pygame.Surface(enemy_size)
     enemy = pygame.image.load('enemy.png').convert_alpha()
-    # enemy.fill(COLOR_BLUE)
     enemy_rect = pygame.Rect(
         WIDTH, random.randint(50, HEIGHT - 50), *enemy_size)
     enemy_move = [random.randint(-8, -4), 0]
@@ -53,9 +53,7 @@ def create_enemy():
 
 def create_bonus():
     bonus_size = (15, 15)
-    # bonus = pygame.Surface(bonus_size)
     bonus = pygame.image.load('bonus.png').convert_alpha()
-    # bonus.fill(COLOR_GREEN)
     bonus_rect = pygame.Rect(random.randint(
         50, WIDTH - 50), 0, *bonus_size)
     bonus_move = [0, random.randint(4, 8)]
@@ -66,12 +64,17 @@ CREATE_ENEMY = pygame.USEREVENT + 1
 pygame.time.set_timer(CREATE_ENEMY, 1500)
 
 CREATE_BONUS = pygame.USEREVENT + 2
-pygame.time.set_timer(CREATE_BONUS, 2000)
+pygame.time.set_timer(CREATE_BONUS, 3000)
+
+CHANGE_IMAGE = pygame.USEREVENT + 3
+pygame.time.set_timer(CHANGE_IMAGE, 200)
 
 enemies = []
 bonuses = []
 
 score = 0
+
+image_index = 0
 
 playing = True
 
@@ -84,8 +87,13 @@ while playing:
             enemies.append(create_enemy())
         if event.type == CREATE_BONUS:
             bonuses.append(create_bonus())
+        if event.type == CHANGE_IMAGE:
+            player = pygame.image.load(os.path.join(
+                IMAGE_PATH, PLAYER_IMAGES[image_index]))
+            image_index += 1
+            if (image_index >= len(PLAYER_IMAGES)):
+                image_index = 0
 
-    # main_display.fill(COLOR_BLACK)
     bg_X1 -= bg_move
     bg_X2 -= bg_move
 
